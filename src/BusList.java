@@ -22,7 +22,7 @@ public class BusList {
 		System.out.println(instrument);
 		System.out.println("----------------------");
 		for (int i = 0; i < personnel.size(); i++) {
-			System.out.print(i + 1 + ") " + personnel.get(i).getName());
+			System.out.print(i + 1 + ") " + personnel.get(i).getFullName());
 			if(!personnel.get(i).getVote().equals("")) {
 				System.out.print(" - " + personnel.get(i).getVote());
 			}

@@ -1,23 +1,82 @@
 
 public class Person {
+		
+	private String firstName;
+	private String lastName;
+	private String nickname;
 	
-	private String name;
-	private int classYear;
+	private String instrument;
+	private String emailAddress;
+	private String classYear;
+	
 	private String vote;
 	private boolean volunteer;
 	
-	public Person(String name, int year, String vote, boolean willingToMove) {
-		this.name = name;
-		this.classYear = year;
-		this.vote = vote;
-		this.setVolunteer(willingToMove);
+	private String timestamp;
+	
+	private boolean surveyFilledOut;
+		
+	public Person(String first, String last, String nickname, String instrument, String email, String classYear) {
+		this.firstName = first;
+		this.lastName = last;
+		this.nickname = nickname;
+		this.instrument = instrument;
+		this.emailAddress = email;
+		this.classYear = classYear;
+		this.vote = "";
+		this.volunteer = false;
+		this.surveyFilledOut = false;
+	}
+	
+
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public String getName() {
-		return name;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public int getClassYear() {
+	public String getNickname() {
+		return nickname;
+	}
+
+	public String getInstrument() {
+		return instrument;
+	}
+
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public void setInstrument(String instrument) {
+		this.instrument = instrument;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	public String getFullName() {
+		if (this.nickname.equals("")) {
+			return this.firstName + " " + this.lastName;
+		}
+		return this.nickname + " " + this.lastName;
+	}
+
+	public String getClassYear() {
 		return classYear;
 	}
 
@@ -25,11 +84,7 @@ public class Person {
 		return vote;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setClassYear(int classYear) {
+	public void setClassYear(String classYear) {
 		this.classYear = classYear;
 	}
 
@@ -43,6 +98,28 @@ public class Person {
 
 	public void setVolunteer(boolean volunteer) {
 		this.volunteer = volunteer;
+	}
+
+	public boolean isSurveyFilledOut() {
+		return surveyFilledOut;
+	}
+
+	public void setSurveyFilledOut(boolean didFillOutSurvey) {
+		this.surveyFilledOut = didFillOutSurvey;
+	}
+	
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+	
+	public String getTimestamp() {
+		return this.timestamp;
+	}
+	
+	
+	
+	public String toString() {
+		return this.firstName + " " + this.lastName;
 	}
 	
 }

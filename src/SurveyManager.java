@@ -32,9 +32,11 @@ public class SurveyManager {
 	private JLabel leftPath, rightPath;
 	private JTextArea consoleArea;
 	private Sidebar sidebar;
-	
+
 	private String[][] leftTableData, rightTableData;
 	public Map<String, ColumnMapping> colMappings;
+
+	public ArrayList<Person> people;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -111,20 +113,6 @@ public class SurveyManager {
 		});
 		topToolbar.leftSection.add(surveyBtn);
 
-		/*
-		// CREATE Configure Columns Button
-		SurveyManager ref = this;
-		ToolbarButton colsBtn = new ToolbarButton("Configure Columns", ResourceLoader.getIcon("ConfigureColumns"));
-		colsBtn.setPreferredSize(new Dimension(125, 80));
-		colsBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ColConfigWindow colConfig = new ColConfigWindow(ref);
-				colConfig.setVisible(true);
-			}
-		});
-		topToolbar.centerSection.add(colsBtn);
-		*/
-
 		// CREATE Correlate Button
 		ToolbarButton correlateBtn = new ToolbarButton("Correlate", ResourceLoader.getIcon("Correlate"));
 		correlateBtn.setPreferredSize(new Dimension(100, 80));
@@ -189,7 +177,7 @@ public class SurveyManager {
 		this.leftPath.setPreferredSize(new Dimension(0, 22));
 		this.rightPath = new JLabel("2) No file loaded");
 		this.rightPath.setPreferredSize(new Dimension(0, 22));
-		
+
 		this.sidebar = new Sidebar(this);
 		this.sidebar.setLayout(new BoxLayout(this.sidebar, BoxLayout.Y_AXIS));
 		JScrollPane sidebarScrollView = new JScrollPane(this.sidebar);
@@ -208,7 +196,7 @@ public class SurveyManager {
 		JSplitPane verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitPane, consoleScrollPane);
 		verticalSplitPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		verticalSplitPane.setResizeWeight(0.75);
-		
+
 		// CREATE Full Split
 		JSplitPane bigSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, verticalSplitPane, sidebarScrollView);
 		bigSplitPane.setResizeWeight(0.75);
@@ -249,7 +237,7 @@ public class SurveyManager {
 
 		String[][] roster = SpreadsheetManager.getTableFromSpreadsheet(path);
 		this.rightTableData = roster;
-			
+
 		for (int i = 0; i < roster[0].length; i++) {
 			this.rightTable.addColumn();
 		}
@@ -265,29 +253,38 @@ public class SurveyManager {
 		this.rightTable.fitToContent();
 
 	}
-	
+
 	private void correlateSet() {
-		ArrayList<String> diff = TableOps.getSetDifference(this.leftTableData, this.rightTableData, this.sidebar.getMappings());
-		
-		
+		ArrayList<Person> people = TableOps.getPeopleList(this.leftTableData, this.sidebar.getMappings());
+		TableOps.fillSurveyData(people, this.rightTableData, this.sidebar.getMappings());
+
+		for (Person p: people) {
+			System.out.println(p);
+		}
+
+		ArrayList<Person> diff = TableOps.getSurveyStragglers(people);
+
 		printToConsole("\nThe following people have not filled out the active survey:");
-		for (String p : diff) {
-			printToConsole(p + "," + TableOps.getEmailAddressForPerson(this.leftTableData, p, this.sidebar.getMappings()));
+		for (Person p : diff) {
+			String name = "";
+			if (p.getNickname().equals("")) {
+				name = p.getFirstName() + " " + p.getLastName();
+			} else {
+				name = p.getNickname() + " " + p.getLastName();
+			}
+			printToConsole(name + "\t" + p.getEmailAddress());
 		}
 		printToConsole("\n");
-	}
-	
-	public void generateBusLists() {
-		ArrayList<BusList> busLists = TableOps.generateBusLists(this.rightTableData, this.sidebar.getMappings(), this.sidebar.getPositiveAnswer(), this.sidebar.getNegativeAnswer());
 		
-//		for (int i = 0; i < busLists.size(); i++) {
-//			BusList list = busLists.get(i);
-//			System.out.println(list.getInstrument());
-//			System.out.println(list.personnel);
-//			System.out.println("");
-//		}
+		this.people = people;
+
 	}
-	
+
+	public void generateBusLists() {
+		TableOps.generateBusLists(this.people, this.rightTableData, this.sidebar.getMappings(), this.sidebar.getPositiveAnswer(), this.sidebar.getNegativeAnswer()); 
+		printToConsole("Bus List Generation Complete. File Saved.");
+	}
+
 	public void printToConsole(String s) {
 		if (this.consoleArea.getText().length() == 0) {
 			this.consoleArea.setText(s);
@@ -295,7 +292,7 @@ public class SurveyManager {
 			this.consoleArea.setText(this.consoleArea.getText() + "\n" + s);
 		}
 	}
-	
+
 	public String[][] getRightTableData() {
 		return this.rightTableData;
 	}

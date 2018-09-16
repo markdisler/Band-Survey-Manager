@@ -64,7 +64,7 @@ public class Sidebar extends JPanel {
 		this.table.addColumn("Right Table Column");
 		this.table.addColumn("Designation");
 
-		String[] designations = {"First Name", "Last Name", "Nickname", "Full Name", "Instrument", "Email", "Class Year", "Bus Response", "Bus Overflow Volunteer"};
+		String[] designations = {"First Name", "Last Name", "Nickname", "Full Name", "Instrument", "Email", "Class Year", "Timestamp", "Bus Response", "Bus Overflow Volunteer"};
 		TableColumn col = table.getColumnModel().getColumn(2);
 		col.setCellEditor(new ComboBoxEditor(designations));
 		
@@ -85,6 +85,42 @@ public class Sidebar extends JPanel {
 		row3.add("");
 		row3.add("Nickname");
 		this.table.addRow(row3);
+		
+		Vector<String> row4 = new Vector<String>();
+		row4.add("D");
+		row4.add("");
+		row4.add("Email");
+		this.table.addRow(row4);
+		
+		Vector<String> row5 = new Vector<String>();
+		row5.add("E");
+		row5.add("");
+		row5.add("Class Year");
+		this.table.addRow(row5);
+		
+		Vector<String> row6 = new Vector<String>();
+		row6.add("F");
+		row6.add("D");
+		row6.add("Instrument");
+		this.table.addRow(row6);
+		
+		Vector<String> row7 = new Vector<String>();
+		row7.add("");
+		row7.add("E");
+		row7.add("Bus Response");
+		this.table.addRow(row7);
+		
+		Vector<String> row8 = new Vector<String>();
+		row8.add("");
+		row8.add("F");
+		row8.add("Bus Overflow Volunteer");
+		this.table.addRow(row8);
+		
+		Vector<String> row9 = new Vector<String>();
+		row9.add("");
+		row9.add("A");
+		row9.add("Timestamp");
+		this.table.addRow(row9);
 		
 		for (int i = 0; i < 3; i++)
 			this.table.addBlankRow();
